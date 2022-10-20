@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static//css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <section class="container user-body">
+      <form method="POST" id="rendered-form ">
+        <div class="rendered-form">
+          <div><h1 class ="h1 heading space">Your Details</h1></div>
+          <div class="form-group ">
+            <label for="text">Enter name</label >
+            <input type="text" class="form-control" placeholder="Full name" name="name" >
+          </div>
+         
+          <div class="form-group">
+            <label for="number">Age</label>
+            <input type="number" min="18" max="115" class="form-control"  placeholder="Year of birth" name="age"/>
+          </div>
+
+          <div class="form-group">
+            <label for="number">Height</label>
+            <input type="number" min="50" max="300" class="form-control" placeholder="in cm" name="height"/>
+          </div>
+
+          <div class="form-group">
+            <label for="number">weight</label>
+            <input type="number" min="25" max="200" class="form-control" placeholder="in kg" name="weight"/>
+          </div>
+           
+
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="gender">Gender</label>
+            <div class="col-md-4">
+            <div class="radio">
+              <label for="gender-0">
+                <input type="radio" name="gender" id="gender-0" value="M" checked="checked" >
+                Male
+              </label>
+              </div>
+            <div class="radio">
+              <label for="gender-1">
+                <input type="radio" name="gender" id="gender-1" value="F">
+                Female
+              </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Multiple Radios -->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="goal">Goal</label>
+            <div class="col-md-4">
+            <div class="radio">
+              <label for="goal-0">
+                <input type="radio" name="goal" id="goal-0" value="loss" checked="checked">
+                weight loss
+              </label>
+              </div>
+            <div class="radio">
+              <label for="goal-1">
+                <input type="radio" name="goal" id="goal-1" value="gain">
+               Weight-Gain 
+              </label>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class=" form-group">
+            <button type="submit" class="btn btn-danger">Enter</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </body>
+</html>
