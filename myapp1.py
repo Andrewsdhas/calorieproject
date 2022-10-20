@@ -70,11 +70,12 @@ def userDetails():
     bmi=(weight/((height/100)*(height/100)))
     bmi=round(bmi,2)
     bmr=0
+    concal=0
     if sex=='M':
         bmr=(10*weight)+(6.25*height)-(5*age)+5
         bmr=round(bmr,2)
         if goal=='gain':
-            calintake=bmr*2
+            calintake=bmr*1.7
         else:
             calintake=1.1*bmr
 
@@ -87,8 +88,8 @@ def userDetails():
     calintake=round(calintake,2)
     with open(username1+'details.txt','a')as fd:
         if os.path.getsize(username1+'details.txt')==0:
-            fd.write('TIMESTAMP|NAME|AGE|HEIGHT|WEIGHT|SEX|GOAL|BMI|BMR|CALORI INTAKE')
-        fd.write('\n'+timestamp+'|'+name+'|'+str(age)+'|'+ str(height)+'|'+str(weight)+'|'+sex+'|'+goal+'|'+ str(bmi)+'|'+str(bmr)+'|'+str(calintake) )
+            fd.write('TIMESTAMP|NAME|AGE|HEIGHT|WEIGHT|SEX|GOAL|BMI|BMR|CALORI INTAKE|CONSUMED CALORIE\n')
+        fd.write(timestamp+'|'+name+'|'+str(age)+'|'+ str(height)+'|'+str(weight)+'|'+sex+'|'+goal+'|'+ str(bmi)+'|'+str(bmr)+'|'+str(calintake)+'|'+str(concal)+'\n' )
     return redirect('/dashboard')
  return render_template("userdetails.html")
 
@@ -99,6 +100,8 @@ def dashboard():
     lunch=[]
     dinner=[]
     snacks=[]
+    global concal
+    concal=0
     with open(username1+'details.txt','r') as fd:
         for line in fd:
             line=line.rstrip('\n')            #remove nextline character
@@ -116,7 +119,13 @@ def dashboard():
         bmr=list[8]
         calin=list[9]
     if timestamp<str(datetime.datetime.date(datetime.datetime.now())):
+        new=open(username1+'details.txt','a')
+        new.write(str(datetime.datetime.date(datetime.datetime.now()))+'|'+name+'|'+str(age)+'|'+ str(height)+'|'+str(weight)+'|'+sex+'|'+goal+'|'+ str(bmi)+'|'+str(bmr)+'|'+str(calin)+'|'+str(concal)+'\n')
+        new.close()
+        fd=open(username1+'meal.txt','w')
+        fd.close()
         flash("update your details")
+        return redirect('/dashboard')
     fdem=open(username1+'meal.txt','a')
     fdem.close()   
     heading=[('MEAL','CALORIES/gram')]
@@ -129,7 +138,7 @@ def dashboard():
         for line in fd:
             line=line.rstrip('\n')            #remove nextline character
             list=line.split('|')  
-            if(list[2]=='B'or list[2]=='A' ):
+            if(list[2]=='B'or list[2]=='A'):
                 items.append((list[0],list[1]))   
             if(list[2]=='L'or list[2]=='A' or list[2]=='LD'):
                 items1.append((list[0],list[1]))
@@ -160,8 +169,23 @@ def dashboard():
          concal=round(concal,2)
          if concal>=float(calin):
             flash("you have consumed more calorie than required")
+    with open(username1+'details.txt','r') as fd:
+        dum=open('dummy.txt','a')
+        for line in fd:
+         line=line.rstrip('\n')            #remove nextline character
+         list=line.split('|')
+         if list[0]=='TIMESTAMP':
+             dum.write(line+'\n')
+         elif(list[0]==str(datetime.datetime.date(datetime.datetime.now()))):
+             dum.write(timestamp+'|'+list[1]+'|'+list[2]+'|'+ list[3]+'|'+list[4]+'|'+list[5]+'|'+list[6]+'|'+ list[7]+'|'+list[8]+'|'+list[9]+'|'+str(concal)+'\n' )
+         else:
+             dum.write(line+'\n')
+        dum.close()
+        fd.close()
+        os.remove(username1+'details.txt')
+        os.rename('dummy.txt',username1+'details.txt')
 
-    fd=open('anishdetails.txt','r')
+    fd=open(username1+'details.txt','r')
     dataitems=[]
     prevweight=0
     for line in fd:
@@ -171,14 +195,19 @@ def dashboard():
             continue
         it=list[0]
         li=it.split('-')
-        x=li[2]+'-'+li[1]
+        x=int(li[2]+li[1])
         if prevweight!=int(list[4]):
          prevweight=y=int(list[4])
          dict={'x':x,'y':y}
          dataitems.append(dict)
          continue
-    var=float(list[9])/float(list[10])
-    return render_template("dashboard.html",username=username,name=name,age=age,height=height,weight=weight,sex=sex,goal=goal,bmi=bmi,bmr=bmr,calin=calin,heading=heading,items=items,items1=items1,items2=items2,items3=items3,breakfast=breakfast,lunch=lunch,snacks=snacks,dinner=dinner,concal=concal,dheadings=dheadings,totalcal=var,dataitems=dataitems)
+    # print(dataitems)
+    var=float(list[10])/float(list[9])
+#   var=round(var,2)
+    # print(var)
+    if var>0.999:
+      var=1
+    return render_template("dashboard.html",username=username,name=name,age=age,height=height,weight=weight,sex=sex,goal=goal,bmi=bmi,bmr=bmr,calin=calin,heading=heading,items=items,items1=items1,items2=items2,items3=items3,breakfast=breakfast,lunch=lunch,snacks=snacks,dinner=dinner,concal=concal,dheadings=dheadings,totalcal=var,data=dataitems)
 
 @app.route("/addmeal", methods=['GET','POST'])
 def addmeal():
@@ -211,13 +240,11 @@ def addmeal():
                 concal=round(concal,2)
             else:
                 dum.write(line+'\n')
-        concal=round(concal,2)
         dum.write(meal+'|'+str(qty)+'|'+mealtype+'|'+str(concal)+'\n')
         dum.close()
         fd2.close()
         os.remove(username1+'meal.txt')
         os.rename('dummy.txt',username1+'meal.txt')
-
     return redirect('/dashboard')
 
 @app.route("/updatemeal",methods=['GET','POST'])
@@ -277,30 +304,44 @@ def update():
         name=list[1]
         sex=list[5]
         height=int(list[3])
-        if request.method=="POST":
-            timestamp=str(datetime.datetime.date(datetime.datetime.now()))
-            weight=request.form.get('weight',type=int)
-            age=request.form.get('age',type=int)
-            goal=request.form.get('goal')
-            bmi=(weight/((height/100)*(height/100)))
-            bmi=round(bmi,2)
-            bmr=0
-            if sex=='M':
-                bmr=(10*weight)+(6.25*height)-(5*age)+5
-                if goal=='gain':
-                    calintake=bmr*1.7
-                else:
-                    calintake=1.1*bmr
-            if sex=='F':
-                bmr=(10*weight)+(6.25*height)-(5*age)-161
-                if goal=='gain':
-                    calintake=1.5*bmr
-                else:
-                    calintake=bmr
-            calintake=round(calintake,2)
-            with open(username1+'details.txt','a')as fd:
-                fd.write('\n'+timestamp+'|'+name+'|'+str(age)+'|'+ str(height)+'|'+str(weight)+'|'+sex+'|'+goal+'|'+ str(bmi)+'|'+str(bmr)+'|'+str(calintake) )
-            return redirect('/dashboard')
+
+    if request.method=="POST":
+        timestamp=str(datetime.datetime.date(datetime.datetime.now()))
+        weight=request.form.get('weight',type=int)
+        age=request.form.get('age',type=int)
+        goal=request.form.get('goal')
+        bmi=(weight/((height/100)*(height/100)))
+        bmi=round(bmi,2)
+        bmr=0
+        if sex=='M':
+            bmr=(10*weight)+(6.25*height)-(5*age)+5
+            if goal=='gain':
+                calintake=bmr*1.7
+            else:
+                calintake=1.1*bmr
+        if sex=='F':
+            bmr=(10*weight)+(6.25*height)-(5*age)-161
+            if goal=='gain':
+                calintake=1.5*bmr
+            else:
+                calintake=bmr
+        calintake=round(calintake,2)
+        fd=open(username1+'details.txt','r')
+        dum=open('dummy.txt','a')
+        for line in fd:
+            line=line.rstrip('\n')            #remove nextline character
+            list=line.split('|')
+            if list[0]=='TIMESTAMP':
+                dum.write(line+'\n')
+            elif(list[0]==str(datetime.datetime.date(datetime.datetime.now()))):
+                dum.write(timestamp+'|'+name+'|'+str(age)+'|'+ str(height)+'|'+str(weight)+'|'+sex+'|'+goal+'|'+ str(bmi)+'|'+str(bmr)+'|'+str(calintake)+'|'+str(concal)+'\n')
+            else:
+                dum.write(line+'\n')
+        dum.close()
+        fd.close()
+        os.remove(username1+'details.txt')
+        os.rename('dummy.txt',username1+'details.txt')            
+        return redirect('/dashboard')
     return render_template("updateform.html",username=username,name=name,sex=sex,height=height)
 
 

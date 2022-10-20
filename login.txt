@@ -1,1 +1,5 @@
-Name|Email|Phoneno|Password
+USERNAME|EMAIL|PHONENO|PASSWORD
+anish|anish.vivaan@gmail.com|8904116396|1234
+andrewsdhas00|andrewsdhas00@gmail.com|9071268225|1234
+mathewsdhas16|mathewsdhas16@gmail.com|8974561230|1234
+sherin|sherindas96@gmail.com|8951669224|1234

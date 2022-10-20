@@ -6,7 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
-  <link rel="stylesheet" href="/static/css/dashboard.css" />
+  <link rel="stylesheet" href="/static/css/bloat.css" />
+  <link rel="stylesheet" href="/static/css/dashboard.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -18,6 +19,39 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
     integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/bloat.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.2/circle-progress.min.js"></script>
+    <script>
+        window.onload = function () {
+        
+        var options = {
+            animationEnabled: true,  
+            title:{
+                text: "Weight progression"
+            },
+            axisY: {
+                title: "Weight (in Kg's)",
+            },
+            data: [{
+                type: "spline",
+                
+                dataPoints: [
+                    { x: 10, y: 10 },
+                    { x: 20, y: 12 },
+                    { x: 30, y: 8 },
+                    { x: 40, y: 14 },
+                    { x: 50, y: 6 },
+                    { x: 60, y: 24 },
+                    { x: 70, y: 25 },
+                    { x: 80, y: 10 }
+                ]
+            }]
+        };
+        $("#chartContainer").CanvasJSChart(options);
+        
+        }
+        </script>
 </head>
 
 <body>
@@ -76,6 +110,38 @@
       </div>
     </div>
   </div>
+  <div class="container">
+    <div class="row ">
+        <div class="col-6 align_flash">
+          <div class="wrapper">
+            <div class="card">
+              <div class="circle">
+                <div class="bar"></div>
+                <div class="box"><span></span></div>
+              </div>
+              <div class="text"> Calorie intake progression</div>
+            </div>
+          </div>
+        </div>
+          <script>
+            let options = {
+              startAngle: -1.55,
+              size: 150,
+              value: 0.5,
+              fill: {gradient: ['#d5092b']}
+            }
+            $(".circle .bar").circleProgress(options).on('circle-animation-progress',
+            function(event, progress, stepValue){
+              $(this).parent().find("span").text(String(stepValue.toFixed(2).substr(2)) + "%");
+            });
+          </script>
+        <div class="col-6 align_flash sit">
+            <div id="chartContainer" class="style_grapgh" style="height: 320px; width: 450px;"></div>
+        <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+        <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script></div>
+      </div>
+      </div>
+  
   <div class="plan space">Plan</div>
   <div class="container space">
     <table class="table">
@@ -423,7 +489,7 @@
         <div class="modal-body">
           <table class="table table-borderless">
             <thead>
-              {% if dheadings %} {% for row in dheadings %}
+              {% if dheading %} {% for row in dheading %}
               <tr class="text-uppercase text-danger">
                 {% for cells in row %}
 
@@ -471,7 +537,7 @@
         <div class="modal-body">
           <table class="table table-borderless">
             <thead>
-              {% if dheadings %} {% for row in dheadings %}
+              {% if dheading %} {% for row in dheading %}
               <tr class="text-uppercase text-danger">
                 {% for cells in row %}
 
@@ -521,7 +587,7 @@
         <div class="modal-body">
           <table class="table table-borderless">
             <thead>
-              {% if dheadings %} {% for row in dheadings %}
+              {% if dheading %} {% for row in dheading %}
               <tr class="text-uppercase text-danger">
                 {% for cells in row %}
 
@@ -569,7 +635,7 @@
         <div class="modal-body">
           <table class="table table-borderless">
             <thead>
-              {% if dheadings %} {% for row in dheadings %}
+              {% if dheading %} {% for row in dheading %}
               <tr class="text-uppercase text-danger">
                 {% for cells in row %}
 

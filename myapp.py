@@ -129,13 +129,13 @@ def dashboard():
         for line in fd:
             line=line.rstrip('\n')            #remove nextline character
             list=line.split('|')  
-            if(list[2]=='B'or list[2]=='A' ):
+            if(list[2]=='B'or list[2]=='A'):
                 items.append((list[0],list[1]))   
-            if(list[2]=='L'or list[2]=='A' or list[2]=='LD'):
+            if(list[2]=='L'or list[2]=='A'):
                 items1.append((list[0],list[1]))
             if(list[2]=='S'):
                 items3.append((list[0],list[1]))
-            if(list[2]=='D'or list[2]=='A'or list[2]=='LD'):
+            if(list[2]=='D'or list[2]=='A'):
                 items2.append((list[0],list[1]))
     
     with open(username1+'meal.txt','r') as fd:
@@ -161,24 +161,8 @@ def dashboard():
          if concal>=float(calin):
             flash("you have consumed more calorie than required")
 
-    fd=open('anishdetails.txt','r')
-    dataitems=[]
-    prevweight=0
-    for line in fd:
-        line=line.rstrip('\n')
-        list=line.split('|')
-        if(list[0]=='TIMESTAMP'):
-            continue
-        it=list[0]
-        li=it.split('-')
-        x=li[2]+'-'+li[1]
-        if prevweight!=int(list[4]):
-         prevweight=y=int(list[4])
-         dict={'x':x,'y':y}
-         dataitems.append(dict)
-         continue
-    var=float(list[9])/float(list[10])
-    return render_template("dashboard.html",username=username,name=name,age=age,height=height,weight=weight,sex=sex,goal=goal,bmi=bmi,bmr=bmr,calin=calin,heading=heading,items=items,items1=items1,items2=items2,items3=items3,breakfast=breakfast,lunch=lunch,snacks=snacks,dinner=dinner,concal=concal,dheadings=dheadings,totalcal=var,dataitems=dataitems)
+
+    return render_template("dashboard.html",username=username,name=name,age=age,height=height,weight=weight,sex=sex,goal=goal,bmi=bmi,bmr=bmr,calin=calin,heading=heading,items=items,items1=items1,items2=items2,items3=items3,breakfast=breakfast,lunch=lunch,snacks=snacks,dinner=dinner,concal=concal,dheadings=dheadings)
 
 @app.route("/addmeal", methods=['GET','POST'])
 def addmeal():

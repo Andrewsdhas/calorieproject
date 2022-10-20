@@ -1,0 +1,28 @@
+MEAL|CALORIES|type
+Bread(1 slice)|74|A
+Rice|1.3|LD
+Oats|4|B
+Pasta|1.3|A
+Vegetables|1|LD
+Watermelon|3.3|S
+Potatoes|0.77|A
+Quinoa|1.3|LD
+Chicken|4|LD
+Eggs|70|A
+Fish|2|LD
+Milk|0.6|S
+Greek Yogurt|1.5|A
+Paneer|3.69|LD
+WheyProtein|125|A
+Avocado|5.5|A
+Nut Butters|6|S
+Oils|9|A
+Flaxseed|5.34|S
+Black coffee|0.05|S
+Milk coffeee(1 cup)|60|S
+Chapati|2.97|LD
+Biryani|5|LD
+Dal curry|1.1|LD
+Chocos|4|S
+Almonds|6|B
+Mango|60|S
